@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Judges</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        nav ul li a:hover, nav ul li a.active {
+            color: #ffcc00;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .dashboard-box {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 900px;
+        }
+        h2 {
+            font-size: 28px;
+            color: #ffcc00;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid white;
+            text-align: center;
+        }
+        th {
+            background: rgba(255, 255, 255, 0.3);
+            color: #ffcc00;
+        }
+        td {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        button {
+            padding: 8px 12px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .btn-edit {
+            background: #ffcc00;
+            color: black;
+        }
+        .btn-delete {
+            background: red;
+            color: white;
+        }
+        .btn-edit:hover {
+            background: #e6b800;
+        }
+        .btn-delete:hover {
+            background: darkred;
+        }
+        .form-group {
+            margin: 10px 0;
+            text-align: left;
+            width: 100%;
+        }
+        .form-group label {
+            font-size: 16px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+        .button-container {
+            text-align: right;
+            margin-top: 10px;
+        }
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #ffcc00;
+            color: black;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: 0.3s;
+            display: block;
+            margin: auto;
+        }
+        button[type="submit"]:hover {
+            background: #e6b800;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Event Rating System</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dashboard-box">
+            <h2>Manage Judges</h2>
+
+            <!-- Form for adding/updating a judge -->
+            <form id="judgeForm">
+                <input type="hidden" id="judgeId">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <div class="button-container">
+                    <button type="submit">Save Judge</button>
+                </div>
+            </form>
+
+            <!-- Judges Table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="judgesTable"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Event Rating System. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", fetchJudges);
+    
+        function fetchJudges() {
+            fetch("/judges")
+                .then(response => response.json())
+                .then(data => {
+                    const table = document.getElementById("judgesTable");
+                    table.innerHTML = "";
+                    data.forEach(judge => {
+                        table.innerHTML += `
+                            <tr id="judge-${judge.id}">
+                                <td>${judge.name}</td>
+                                <td>${judge.email}</td>
+                                <td>
+                                    <button class="btn-edit" onclick="editJudge(${judge.id}, '${judge.name}', '${judge.email}')">Edit</button>
+                                    <button class="btn-delete" onclick="deleteJudge(${judge.id})">Delete</button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(error => console.error("Error fetching judges:", error));
+        }
+    
+        document.getElementById("judgeForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const id = document.getElementById("judgeId").value;
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+    
+            const method = id ? "PUT" : "POST";
+            const url = id ? `/judges/${id}` : "/judges";
+    
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                document.getElementById("judgeForm").reset();
+                fetchJudges();
+            })
+            .catch(error => console.error("Error saving judge:", error));
+        });
+    
+        function deleteJudge(id) {
+            if (confirm("Are you sure you want to delete this judge?")) {
+                fetch(`/judges/${id}`, { method: "DELETE" })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        document.getElementById(`judge-${id}`).remove(); // Remove row without reloading
+                    })
+                    .catch(error => console.error("Error deleting judge:", error));
+            }
+        }
+    
+        function editJudge(id, name, email) {
+            document.getElementById("judgeId").value = id;
+            document.getElementById("name").value = name;
+            document.getElementById("email").value = email;
+        }
+    </script>
+    
+
+</body>
+</html>

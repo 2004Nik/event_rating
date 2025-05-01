@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Winners - Admin Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 60px;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 15px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      color: #ffcc00;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+
+    .dashboard-box {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 900px;
+      margin: auto;
+      backdrop-filter: blur(12px);
+    }
+
+    h2 {
+      font-size: 28px;
+      color: #ffcc00;
+      margin-bottom: 20px;
+    }
+
+    label, select, button {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    select, button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 8px;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    button {
+      background-color: #ffcc00;
+      color: black;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #e6b800;
+      transform: scale(1.05);
+    }
+
+    table {
+      margin: 30px auto 10px;
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      color: black;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background-color: #ffcc00;
+      color: black;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #ffcc00;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Event Rating System</div>
+  <nav>
+    <ul>
+      <li><a href="/admin/dashboard">Dashboard</a></li>
+      <li><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="dashboard-box">
+    <h2>Top 5 Winners</h2>
+
+    <!-- Select + Button -->
+    <label for="event">Select Event:</label>
+    <select id="event">
+      <option value="">Loading events...</option>
+    </select>
+    <button onclick="loadWinners()">Show Winners</button>
+
+    <!-- Table -->
+    <table id="winnerTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Candidate Name</th>
+          <th>Candidate ID</th>
+          <th>Average Score</th>
+        </tr>
+      </thead>
+      <tbody id="winnerBody"></tbody>
+    </table>
+
+    <p id="message"></p>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 Event Rating System. All Rights Reserved.</p>
+</footer>
+
+<script>
+  // Load events on page load
+  window.onload = () => {
+    fetch('/api/events')
+      .then(response => response.json())
+      .then(data => {
+        const eventSelect = document.getElementById('event');
+        eventSelect.innerHTML = '<option value="">-- Select Event --</option>';
+        data.forEach(event => {
+          const option = document.createElement('option');
+          option.value = event.id;
+          option.textContent = event.name;
+          eventSelect.appendChild(option);
+        });
+      })
+      .catch(() => {
+        document.getElementById('event').innerHTML = '<option value="">Failed to load events</option>';
+      });
+  };
+
+  // Load winners for selected event
+  function loadWinners() {
+    const eventId = document.getElementById('event').value;
+    const table = document.getElementById('winnerTable');
+    const tbody = document.getElementById('winnerBody');
+    const message = document.getElementById('message');
+
+    // Clear old data
+    tbody.innerHTML = '';
+    message.textContent = '';
+    table.style.display = 'none';
+
+    if (!eventId) {
+      message.textContent = 'Please select an event.';
+      return;
+    }
+
+    fetch(`/api/winners?event_id=${eventId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.length === 0) {
+          message.textContent = 'No winners found for this event.';
+          return;
+        }
+
+        data.forEach((winner, index) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${winner.candidate_name}</td>
+            <td>${winner.candidate_id}</td>
+            <td>${parseFloat(winner.avg_score).toFixed(2)}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        table.style.display = 'table';
+      })
+      .catch(() => {
+        message.textContent = 'Error fetching winners.';
+      });
+  }
+</script>
+
+</body>
+</html>

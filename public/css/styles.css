@@ -1,0 +1,252 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    color: white;
+    opacity: 0;
+    animation: fadeIn 0.8s ease-in-out forwards;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #ffcc00;
+    letter-spacing: 1.5px;
+}
+
+/* Navigation */
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+}
+
+nav ul li {
+    margin: 0 20px;
+    position: relative;
+}
+
+nav ul li a, 
+.dropbtn {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 12px 18px;
+    transition: 0.3s;
+    position: relative;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    display: inline-block;
+    cursor: pointer;
+}
+
+nav ul li a:hover, 
+.dropbtn:hover {
+    background: rgba(255, 204, 0, 0.9);
+    color: black;
+}
+
+/* Dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+    min-width: 180px;
+    text-align: left;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    top: 50px;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 12px 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.dropdown-content a:hover {
+    background: rgba(255, 204, 0, 0.8);
+    color: black;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    opacity: 0;
+    animation: slideUp 0.8s ease-in-out forwards;
+}
+
+.hero h1 {
+    font-size: 55px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #ffcc00, #ff5733);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 15px rgba(255, 204, 0, 0.8);
+}
+
+.hero p {
+    font-size: 22px;
+    max-width: 600px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background: #ff5733;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 25px;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #c70039;
+    transform: scale(1.1);
+}
+
+/* Footer */
+footer {
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
+    color: white;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    header {
+        padding: 12px 25px;
+    }
+    .logo {
+        font-size: 24px;
+    }
+    nav ul {
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.1);
+        position: absolute;
+        top: 60px;
+        right: 10px;
+        border-radius: 10px;
+        display: none;
+        width: 200px;
+        padding: 10px;
+    }
+    nav ul li {
+        margin: 10px 0;
+    }
+    nav ul li a, .dropbtn {
+        display: block;
+        padding: 12px;
+        text-align: center;
+    }
+    nav.active ul {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 40px;
+    }
+    .hero p {
+        font-size: 18px;
+    }
+    .btn {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h1 {
+        font-size: 32px;
+    }
+    .hero p {
+        font-size: 16px;
+    }
+    .btn {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+}

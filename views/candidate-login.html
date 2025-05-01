@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Login</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; text-align: center; }
+        header { background: rgba(255, 255, 255, 0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 24px; font-weight: bold; color: #ffcc00; }
+        nav ul { list-style: none; display: flex; }
+        nav ul li { margin: 0 15px; position: relative; }
+        nav ul li a { color: white; text-decoration: none; font-size: 18px; transition: 0.3s; }
+        nav ul li a:hover, nav ul li a.active { color: #ffcc00; }
+        .dropdown-content { display: none; position: absolute; background: rgba(255, 255, 255, 0.2); min-width: 150px; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); z-index: 1; border-radius: 5px; }
+        .dropdown-content a { display: block; padding: 10px; color: white; text-align: left; }
+        .dropdown:hover .dropdown-content { display: block; }
+        .form-container { display: flex; justify-content: center; align-items: center; height: 80vh; }
+        .form-box { background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); border-radius: 12px; padding: 30px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); text-align: center; width: 400px; }
+        h2 { font-size: 28px; margin-bottom: 20px; color: #ffcc00; }
+        .input-group { text-align: left; margin-bottom: 20px; }
+        .input-group label { font-size: 14px; font-weight: bold; color: #fff; display: block; margin-bottom: 5px; }
+        .input-group input { width: 100%; padding: 10px; border: none; border-radius: 8px; outline: none; font-size: 16px; background: rgba(255, 255, 255, 0.2); color: #fff; }
+        .input-group input::placeholder { color: rgba(255, 255, 255, 0.6); }
+        .btn { width: 100%; background: #ffcc00; color: black; padding: 12px; font-size: 18px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn:hover { background: #e6b800; transform: scale(1.05); }
+        footer { text-align: center; padding: 15px; font-size: 14px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); position: absolute; bottom: 0; width: 100%; color: rgba(255, 255, 255, 0.7); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Event Rating System</div>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn active">Login</a>
+                    <div class="dropdown-content">
+                        <a href="/login/admin">Admin Login</a>
+                        <a href="/login/judge">Judge Login</a>
+                        <a href="/login/candidate" class="active">Candidate Login</a>
+                    </div>
+                </li>
+                <li><a href="/register">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <div class="form-box">
+                <h2>Candidate Login</h2>
+                <form action="/login/candidate" method="POST">
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Event Rating System. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>

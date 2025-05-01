@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Events</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+        nav ul li a:hover, nav ul li a.active {
+            color: #ffcc00;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            width: 80%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            font-size: 28px;
+            color: #ffcc00;
+            margin-bottom: 15px;
+        }
+        .event-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .event-box h3 {
+            color: #ffcc00;
+            margin-bottom: 5px;
+        }
+        .event-box p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .btn {
+            background: #ffcc00;
+            color: black;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 5px;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #e6b800;
+            transform: scale(1.05);
+        }
+        .btn-delete {
+            background: red;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: darkred;
+        }
+        .edit-form {
+            display: none;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .edit-form input, .edit-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        textarea {
+            resize: none;
+            height: 60px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Event Rating System</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h2>Manage Events</h2>
+            <div id="error-message" class="error"></div>
+            <div id="events-container">
+                <!-- Events will be loaded here dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Event Rating System. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        async function fetchEvents() {
+            try {
+                const response = await fetch('/get-events');
+                const data = await response.json();
+
+                if (!Array.isArray(data)) {
+                    throw new Error("Invalid data format received.");
+                }
+
+                const container = document.getElementById('events-container');
+                container.innerHTML = '';
+
+                data.forEach(event => {
+                    // Extract date and time from event_datetime
+                    const eventDateTime = new Date(event.event_datetime);
+                    const eventDate = eventDateTime.toISOString().split('T')[0]; // YYYY-MM-DD
+                    const eventTime = eventDateTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}); // HH:MM
+
+                    const eventBox = document.createElement('div');
+                    eventBox.classList.add('event-box');
+                    eventBox.innerHTML = `
+                        <h3>${event.event_name}</h3>
+                        <p><strong>Date:</strong> ${eventDate}</p>
+                        <p><strong>Time:</strong> ${eventTime}</p>
+                        <p><strong>Location:</strong> ${event.event_location}</p>
+                        <p><strong>Description:</strong> ${event.event_description}</p>
+                        <button class="btn" onclick="toggleEditForm(${event.id})">Edit</button>
+                        <button class="btn btn-delete" onclick="deleteEvent(${event.id})">Delete</button>
+                        <div class="edit-form" id="edit-form-${event.id}">
+                            <input type="text" id="edit-name-${event.id}" value="${event.event_name}">
+                            <input type="date" id="edit-date-${event.id}" value="${eventDate}">
+                            <input type="time" id="edit-time-${event.id}" value="${eventTime}">
+                            <input type="text" id="edit-location-${event.id}" value="${event.event_location}">
+                            <textarea id="edit-description-${event.id}">${event.event_description}</textarea>
+                            <button class="btn" onclick="updateEvent(${event.id})">Save</button>
+                        </div>
+                    `;
+                    container.appendChild(eventBox);
+                });
+
+            } catch (error) {
+                document.getElementById('error-message').innerText = "Error loading events!";
+                console.error(error);
+            }
+        }
+
+        function toggleEditForm(id) {
+            document.querySelectorAll('.edit-form').forEach(form => form.style.display = 'none');
+            document.getElementById(`edit-form-${id}`).style.display = 'block';
+        }
+
+        async function updateEvent(id) {
+            const name = document.getElementById(`edit-name-${id}`).value;
+            const date = document.getElementById(`edit-date-${id}`).value;
+            const time = document.getElementById(`edit-time-${id}`).value;
+            const location = document.getElementById(`edit-location-${id}`).value;
+            const description = document.getElementById(`edit-description-${id}`).value;
+
+            const response = await fetch('/update-event', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, name, date, time, location, description })
+            });
+
+            if (response.ok) {
+                fetchEvents();
+            } else {
+                alert("Failed to update event.");
+            }
+        }
+
+        async function deleteEvent(id) {
+            if (confirm("Are you sure you want to delete this event?")) {
+                const response = await fetch(`/delete-event/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    fetchEvents();
+                } else {
+                    alert("Failed to delete event.");
+                }
+            }
+        }
+
+        fetchEvents();
+    </script>
+
+</body>
+</html>

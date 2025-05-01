@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Registration</title>
+    <link rel="stylesheet" href="/public/css/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        header {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 10px 15px;
+            transition: 0.3s;
+            border-radius: 8px;
+        }
+        nav ul li a:hover, 
+        nav ul li a.active {
+            background: rgba(255, 204, 0, 0.8);
+            color: black;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .form-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 400px;
+        }
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #ffcc00;
+        }
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .get-otp {
+            color: #ffcc00;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: right;
+            display: block;
+            margin-top: 5px;
+            transition: 0.3s;
+        }
+        .get-otp:hover {
+            text-decoration: underline;
+            color: #ffd633;
+        }
+        .btn {
+            width: 100%;
+            background: #ffcc00;
+            color: black;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover {
+            background: #e6b800;
+            transform: scale(1.05);
+        }
+        .message {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        #otp-field {
+            display: none; /* Initially hidden */
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Event Rating System</div>
+        <nav>
+            <ul>
+                <li><a href="/">Dashboard</a></li>
+                <li><a href="/register" class="active">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="form-box">
+            <h2>Candidate Registration</h2>
+            <form id="registration-form">
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    <span class="get-otp" id="get-otp">Get OTP</span> <!-- Clickable Text -->
+                </div>
+
+                <div class="input-group" id="otp-field">
+                    <label for="otp">Enter OTP</label>
+                    <input type="text" id="otp" name="otp" placeholder="Enter OTP" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn">Register</button>
+            </form>
+            <p class="message"></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Event Rating System. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("get-otp").addEventListener("click", async function() {
+            const email = document.getElementById("email").value;
+            const otpField = document.getElementById("otp-field");
+
+            if (!email) {
+                alert("Please enter an email first.");
+                return;
+            }
+
+            const response = await fetch("/send-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+
+            // Show OTP input field when OTP is sent
+            otpField.style.display = "block";
+        });
+
+        document.getElementById("registration-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+            const messageBox = document.querySelector(".message");
+
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                messageBox.style.color = "lightgreen";
+                messageBox.textContent = "Registration successful!";
+                setTimeout(() => { window.location.href = "/login/candidate"; }, 2000);
+            } else {
+                messageBox.style.color = "red";
+                messageBox.textContent = result.error || "Registration failed.";
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publish Upcoming Event</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; text-align: center; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: rgba(255, 255, 255, 0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 24px; font-weight: bold; color: #ffcc00; }
+        nav ul { list-style: none; display: flex; }
+        nav ul li { margin: 0 15px; position: relative; }
+        nav ul li a { color: white; text-decoration: none; font-size: 18px; transition: 0.3s; }
+        nav ul li a:hover, nav ul li a.active { color: #ffcc00; }
+        .container { margin-top: 50px; flex: 1; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .form-box { background: rgba(255, 255, 255, 0.15); padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); width: 50%; text-align: left; margin-bottom: 50px; }
+        h2 { font-size: 28px; color: #ffcc00; text-align: center; }
+        label { font-size: 18px; font-weight: bold; display: block; margin: 10px 0 5px; }
+        input, textarea { width: 100%; padding: 10px; margin-top: 5px; border: none; border-radius: 5px; font-size: 16px; }
+        textarea { resize: none; height: 100px; }
+        .btn { background: #ffcc00; color: black; padding: 12px 20px; font-size: 18px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; display: block; width: 100%; margin-top: 15px; text-align: center; }
+        .btn:hover { background: #e6b800; transform: scale(1.05); }
+        footer { text-align: center; padding: 15px; font-size: 14px; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(10px); color: rgba(255, 255, 255, 0.7); width: 100%; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Event Rating System</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard">Dashboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="form-box">
+            <h2>Publish Upcoming Event</h2>
+            <form action="/publish-event" method="POST">
+                <label for="event-name">Event Name:</label>
+                <input type="text" id="event-name" name="event_name" required>
+
+                <label for="event-date">Event Date:</label>
+                <input type="date" id="event-date" name="event_date" required min="" />
+
+                <label for="event-time">Event Time:</label>
+                <input type="time" id="event-time" name="event_time" required>
+
+                <label for="event-location">Event Location:</label>
+                <input type="text" id="event-location" name="event_location" required>
+
+                <label for="event-description">Event Description:</label>
+                <textarea id="event-description" name="event_description" required></textarea>
+
+                <button type="submit" class="btn">Publish Event</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Event Rating System. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Set the minimum date for event date to today's date
+        document.getElementById('event-date').setAttribute('min', new Date().toISOString().split('T')[0]);
+    </script>
+
+</body>
+</html>

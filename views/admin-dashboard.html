@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; text-align: center; }
+        header { background: rgba(255, 255, 255, 0.2); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); }
+        .logo { font-size: 24px; font-weight: bold; color: #ffcc00; }
+        nav ul { list-style: none; display: flex; }
+        nav ul li { margin: 0 15px; position: relative; }
+        nav ul li a { color: white; text-decoration: none; font-size: 18px; transition: 0.3s; }
+        nav ul li a:hover, nav ul li a.active { color: #ffcc00; }
+        .container { margin-top: 50px; }
+        .dashboard-box { 
+            background: rgba(255, 255, 255, 0.15); 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+            width: 80%; 
+            margin: auto; 
+        }
+        h2 { font-size: 28px; color: #ffcc00; margin-bottom: 15px; }
+        p { font-size: 18px; margin-bottom: 20px; }
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .btn { 
+            background: #ffcc00; 
+            color: black; 
+            padding: 12px 20px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            display: inline-block; 
+            text-decoration: none;
+        }
+        .btn:hover { background: #e6b800; transform: scale(1.05); }
+        footer { 
+            text-align: center; 
+            padding: 15px; 
+            font-size: 14px; 
+            background: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(10px); 
+            position: absolute; 
+            bottom: 0; 
+            width: 100%; 
+            color: rgba(255, 255, 255, 0.7); 
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Event Rating System</div>
+        <nav>
+            <ul>
+                <li><a href="/admin/dashboard" class="active">Dashboard</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <div class="dashboard-box">
+            <h2>Welcome, Admin!</h2>
+            <p>Manage candidates, judges, events, winners, and upcoming events here.</p>
+            
+            <div class="btn-container">
+                <a href="/manage-candidates" class="btn">Manage Candidates</a>
+                <a href="/manage-judges" class="btn">Manage Judges</a>
+                <a href="/manage-events" class="btn">Manage Events</a>
+                <a href="/manage-winners" class="btn">Manage Winners</a>
+                <a href="/publish-event" class="btn">Publish Upcoming Event</a>
+                <a href="/enrolled-candidates" class="btn">See Enrolled Candidates</a> <!-- ✅ New Button Added -->
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Event Rating System. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
